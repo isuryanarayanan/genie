@@ -1,4 +1,4 @@
-# Working with genie.sh
+# Working with genie.sh, Python, Django
 
 The `genie.sh` shell script is the gateway to start developing with the Genie project. It allows you to start the Docker containers and load the environment variables according to the configuration you want to work in.
 
