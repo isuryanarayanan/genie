@@ -165,8 +165,6 @@ if [ "$binded" = false ]; then
     cp .genie/docker/Dockerfile conf/$keyword/Dockerfile
     cp .genie/docker/.env conf/$keyword/.env
 
-    # To the .env file, add a line GENIE_CONFIGURATION_KEY=keyword, with the comment
-    # # This is the keyword of the configuration
     echo "# This is the keyword of the configuration" >> conf/$keyword/.env
     echo "GENIE_CONFIGURATION_KEY=$keyword" >> conf/$keyword/.env
 

@@ -21,28 +21,34 @@ def manageConfigurations():
     else:
         configurationKey = 'default'
 
-    # If the configurations/ and configurations/genie folder dont exist, create them.
-    if not os.path.exists('project/configurations'):
-        os.makedirs('project/configurations')
-    if not os.path.exists('project/configurations/genie'):
-        os.makedirs('project/configurations/genie')
+    # Get current path to this file
+    project_path = os.path.dirname(os.path.abspath(__file__))
+    genie_path = os.path.join(project_path, 'project/genie')
+    configurations_path = os.path.join(genie_path, 'configurations')
+    configuration_path = os.path.join(configurations_path, configurationKey)
+    base_path = os.path.join(genie_path, 'base')
+
+    if not os.path.exists(genie_path):
+        os.makedirs(genie_path)
+    if not os.path.exists(configurations_path):
+        os.makedirs(configurations_path)
 
     # If the configurations/<configuration_key> folder does not exist, create it.
-    if not os.path.exists('project/configurations/' + configurationKey):
+    if not os.path.exists(configuration_path):
         # Show warning that the environment variable GENIE_CONFIGURATION_KEY is not set.
         print('Warning: GENIE_CONFIGURATION_KEY is not set. Using default configuration.')
-        os.makedirs('project/configurations/' + configurationKey)
+        os.makedirs(configuration_path)
 
         # Copy all the files from configurations/genie to configurations/<configuration_key> but
         # swap out all occurrance of the string --configuration-key-- with the value of the
         # environment variable GENIE_CONFIGURATION_KEY.
-        for file in os.listdir('project/configurations/genie'):
+        for file in os.listdir(base_path):
             if file.endswith('.py'):
-                with open('project/configurations/genie/' + file, 'r') as f:
+                with open(os.path.join(base_path, file), 'r') as f:
                     filedata = f.read()
                 filedata = filedata.replace(
                     '--configuration-key--', configurationKey)
-                with open('project/configurations/' + configurationKey + '/' + file, 'w') as f:
+                with open(os.path.join(configuration_path, file), 'w') as f:
                     f.write(filedata)
 
 
