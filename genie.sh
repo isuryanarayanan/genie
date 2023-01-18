@@ -165,6 +165,9 @@ if [ "$binded" = false ]; then
     cp .genie/docker/Dockerfile conf/$keyword/Dockerfile
     cp .genie/docker/.env conf/$keyword/.env
 
+    echo "# This is the keyword of the configuration" >> conf/$keyword/.env
+    echo "GENIE_CONFIGURATION_KEY=$keyword" >> conf/$keyword/.env
+
     # Update the docker-compose file to switch the __keyword__ with the keyword
     echo $configuration | jq '.keyword' | sed 's/"//g' | xargs -I {} sed -i "s/__keyword__/{}/g" conf/$keyword/docker-compose.yml
 
