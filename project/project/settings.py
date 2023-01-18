@@ -18,11 +18,11 @@ CONFIGURATION_KEY = os.environ['GENIE_CONFIGURATION_KEY']
 BASE_DIR = Path(__file__).resolve().parent.parent
 configurations = {}
 
-for filename in os.listdir(Path("project/configurations/") / CONFIGURATION_KEY):
+for filename in os.listdir(Path("project/genie/configurations/") / CONFIGURATION_KEY):
     if filename.endswith('.py') and not filename.startswith('__'):
         module_name = filename[:-3]
         configurations[module_name] = importlib.import_module(
-            f"project.configurations.{CONFIGURATION_KEY}.{module_name}")
+            f"project.genie.configurations.{CONFIGURATION_KEY}.{module_name}")
 
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "default")
