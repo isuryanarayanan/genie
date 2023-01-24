@@ -43,6 +43,7 @@ fi
 create=false
 help=false
 build=false
+up=false
 
 # Parsing flags
 while [[ $# -gt 0 ]]
@@ -52,6 +53,10 @@ key="$1"
 case $key in
     -c|--create)
     create=true
+    shift # past argument
+    ;;
+    -u|--up)
+    up=true
     shift # past argument
     ;;
     -h|--help)
@@ -74,6 +79,8 @@ if [ "$help" = true ]; then
     echo "Options:"
     echo "  -c, --create     Create a new configuration"
     echo "  -h, --help       Show this help"
+    echo "  -b, --build      Build a configuration"
+    echo "  -u, --up         Start the containers"
     exit
 fi
 
@@ -185,7 +192,15 @@ if [ "$build" = true ]; then
     docker compose -f conf/$keyword/docker-compose.yml build
 fi
 
-docker compose -f conf/$keyword/docker-compose.yml run --service-ports 'project-'$keyword bash
+# If the up flag is passed then just run the containers, if not then open a bash session
+if [ "$up" = true ]; then
+    docker compose -f conf/$keyword/docker-compose.yml up
+    exit
+else
+    echo "Opening bash session ..."
+    docker compose -f conf/$keyword/docker-compose.yml run --service-ports 'project-'$keyword bash
+fi
+
 
 # Ask if the user wants to close the session
 read -p "Do you want to close your session? [y/n] " close_session
