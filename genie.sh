@@ -172,6 +172,11 @@ if [ "$binded" = false ]; then
     cp .genie/docker/Dockerfile conf/$keyword/Dockerfile
     cp .genie/docker/.env conf/$keyword/.env
 
+    # Copy the workflow file to the .github/workflows folder
+    cp .genie/workflows/build.yml .github/workflows/$keyword-build.yml
+    cp .genie/workflows/release.yml .github/workflows/$keyword-release.yml
+
+
     echo "# This is the keyword of the configuration" >> conf/$keyword/.env
     echo "GENIE_CONFIGURATION_KEY=$keyword" >> conf/$keyword/.env
 

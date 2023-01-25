@@ -1,0 +1,6 @@
+{
+  "name": "Staging configuration",
+  "description": "Staging will allow apis to be available publically within the limits that has been set by the administrator.",
+  "keyword": "staging",
+  "binded": true
+}

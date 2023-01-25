@@ -1,0 +1,6 @@
+{
+  "name": "Production configuration",
+  "description": "Production is the main endpoint used as the present public release.",
+  "keyword": "production",
+  "binded": true
+}
