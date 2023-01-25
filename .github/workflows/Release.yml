@@ -18,6 +18,7 @@ jobs:
       run: echo "The tag name is ${{ env.TAG_NAME }}"
 
     - name: Parse the tag name
+      id: parse_tag
       run: |
         echo "Parsing tag name: ${{ env.TAG_NAME }}"
         if echo ${{ env.TAG_NAME }} | grep -q '^staging_'; then
@@ -35,7 +36,7 @@ jobs:
 
     - name: Get project environment variables
       id: get_env_vars
-      run: echo "::set-env name=ENV_NAME::$env_name"
+      run: echo "::set-env name=ENV_NAME::$parse_tag.outputs.env_name"
 
     - name: Run command
       run: echo "Command"
