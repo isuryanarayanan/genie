@@ -45,7 +45,6 @@ help=false
 build=false
 up=false
 commit=false
-push=false
 
 # Parsing flags
 while [[ $# -gt 0 ]]
@@ -55,10 +54,6 @@ key="$1"
 case $key in
     -c|--create)
     create=true
-    shift # past argument
-    ;;
-    -p|--push)
-    push=true
     shift # past argument
     ;;
     -u|--up)
@@ -83,22 +78,11 @@ case $key in
 esac
 done
 
-# If the push flag is set, push the changes
-if [ "$push" = true ]; then
-    echo "---------------------"
-    echo "Pushing changes..."
-    echo "---------------------"
-    git push --follow-tags
-    exit
-fi
-
 # If the commit flag is set, commit the changes
 if [ "$commit" = true ]; then
     echo "---------------------"
     echo "Committing changes..."
     echo "---------------------"
-
-
 
     # Load the JSON file
     data=$(cat .genie/commit_types.json)
@@ -152,6 +136,8 @@ if [ "$commit" = true ]; then
     git add .
     git commit -m "$flag($version): $message"
     git tag -a $semantic_version -m "$flag($version): $message"
+    git push origin
+    git push origin $semantic_version
 
     echo -e "\e[42mChanges committed, new version: $semantic_version\e[0m"
  
