@@ -44,6 +44,7 @@ create=false
 help=false
 build=false
 up=false
+commit=false
 
 # Parsing flags
 while [[ $# -gt 0 ]]
@@ -63,6 +64,10 @@ case $key in
     help=true
     shift # past argument
     ;;
+    -cm|--commit)
+    commit=true
+    shift # past argument
+    ;;
     -b|--build)
     build=true
     shift # past argument
@@ -72,6 +77,74 @@ case $key in
     ;;
 esac
 done
+
+# If the commit flag is set, commit the changes
+if [ "$commit" = true ]; then
+    echo "---------------------"
+    echo "Committing changes..."
+    echo "---------------------"
+
+
+
+    # Load the JSON file
+    data=$(cat .genie/commit_types.json)
+
+    # Convert the JSON data to an array
+    IFS=$'\n' read -r -d '' -a options <<< $(echo "$data" | jq -r '.[] | "\(.flag)|\(.version)"')
+
+    # Use fzf to display the options
+    selected_option=$(printf '%s\n' "${options[@]}" | fzf --preview='jq -r ".[] | select(.flag==\"$(echo {} | cut -d "|" -f 1)\" and .version==\"$(echo {} | cut -d "|" -f 2)\").description" .genie/commit_types.json')
+
+    # Split the selected option into flag and version
+    flag=$(echo $selected_option | cut -d "|" -f 1)
+    version=$(echo $selected_option | cut -d "|" -f 2)
+
+    # Print the selected flag and version
+    echo "Selected flag: $flag"
+    echo "Selected version: $version"
+
+    # Ask for the commit message
+    read -p "Enter commit message: " message
+
+    # Show a preview of the commit message and ask if to continue or discard
+    echo "Commit message: $flag: $message"
+    read -p "Do you want to continue? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+        exit 1
+    fi
+
+    # Get the current version from ./genie/VERSION
+    semantic_version=$(cat .genie/VERSION)
+
+    # Split the version into major, minor and patch
+    major=$(echo $semantic_version | cut -d "." -f 1)
+    minor=$(echo $semantic_version | cut -d "." -f 2)
+    patch=$(echo $semantic_version | cut -d "." -f 3)
+
+    # If the version is major increase the major version, if its patch increase the patch version
+    if [ "$version" = "major" ]; then
+        major=$((major+1))
+        minor=0
+        patch=0
+    elif [ "$version" = "minor" ]; then
+        minor=$((minor+1))
+        patch=0
+    elif [ "$version" = "patch" ]; then
+        patch=$((patch+1))
+    fi
+
+    semantic_version="$major.$minor.$patch"
+
+    # Commit the changes
+    git add .
+    git commit -m "$flag($version): $message"
+
+    echo "Changes committed, new version: $semantic_version"
+ 
+    exit
+fi
 
 # If help flag is set, show help
 if [ "$help" = true ]; then
@@ -172,11 +245,6 @@ if [ "$binded" = false ]; then
     cp .genie/docker/Dockerfile conf/$keyword/Dockerfile
     cp .genie/docker/.env conf/$keyword/.env
 
-    # Copy the workflow file to the .github/workflows folder
-    cp .genie/workflows/build.yml .github/workflows/$keyword-build.yml
-    cp .genie/workflows/release.yml .github/workflows/$keyword-release.yml
-
-
     echo "# This is the keyword of the configuration" >> conf/$keyword/.env
     echo "GENIE_CONFIGURATION_KEY=$keyword" >> conf/$keyword/.env
 
@@ -189,6 +257,7 @@ if [ "$binded" = false ]; then
     sleep 2
     echo "Configuration $selected_mode binded"
 fi
+
 
 
 # Run the docker-compose file
