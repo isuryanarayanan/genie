@@ -141,6 +141,9 @@ if [ "$commit" = true ]; then
     git add .
     git commit -m "$flag($version): $message"
 
+    # Update the version
+    echo $semantic_version > .genie/VERSION
+
     echo "Changes committed, new version: $semantic_version"
  
     exit
