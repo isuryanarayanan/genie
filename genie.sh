@@ -115,15 +115,12 @@ if [ "$commit" = true ]; then
         exit 1
     fi
 
-    # Get the current version from ./genie/VERSION
     semantic_version=$(cat .genie/VERSION)
 
-    # Split the version into major, minor and patch
     major=$(echo $semantic_version | cut -d "." -f 1)
     minor=$(echo $semantic_version | cut -d "." -f 2)
     patch=$(echo $semantic_version | cut -d "." -f 3)
 
-    # If the version is major increase the major version, if its patch increase the patch version
     if [ "$version" = "major" ]; then
         major=$((major+1))
         minor=0
@@ -138,11 +135,10 @@ if [ "$commit" = true ]; then
     semantic_version="$major.$minor.$patch"
     echo $semantic_version > .genie/VERSION
 
-    # Commit the changes
     git add .
     git commit -m "$flag($version): $message"
+    git tag -a $semantic_version -m "$flag($version): $message"
 
-    # Print success message with space around and colored background green
     echo -e "\e[42mChanges committed, new version: $semantic_version\e[0m"
  
     exit
