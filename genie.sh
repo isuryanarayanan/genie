@@ -136,15 +136,14 @@ if [ "$commit" = true ]; then
     fi
 
     semantic_version="$major.$minor.$patch"
+    echo $semantic_version > .genie/VERSION
 
     # Commit the changes
     git add .
     git commit -m "$flag($version): $message"
 
-    # Update the version
-    echo $semantic_version > .genie/VERSION
-
-    echo "Changes committed, new version: $semantic_version"
+    # Print success message with space around and colored background green
+    echo -e "\e[42mChanges committed, new version: $semantic_version\e[0m"
  
     exit
 fi
