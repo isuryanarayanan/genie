@@ -106,8 +106,8 @@ if [ "$commit" = true ]; then
     # Ask for the commit message
     read -p "Enter commit message: " message
 
-    # Show a preview of the commit message and ask if to continue or discard
-    echo "Commit message: $flag: $message"
+    # Show a preview of the commit message and ask if to continue or discard, the text should have a red background
+    echo -e "\e[41mCommit message: $flag: $message\e[0m"
     read -p "Do you want to continue? (y/n) " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]
