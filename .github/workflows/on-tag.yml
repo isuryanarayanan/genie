@@ -78,6 +78,9 @@ jobs:
           region: ${{ secrets.EB_REG }}
           deployment_package: compose.zip
 
+      - name: Success message
+        run: echo "Successfully deployed to development environment"
+
     
 
 
