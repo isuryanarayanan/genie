@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+  api:
+    image: 572198233183.dkr.ecr.ap-south-1.amazonaws.com/genie:latest
+    env_file:
+      - .env
+    ports:
+      - "80:8000"
+
+volumes:
+  static_data:
+
+

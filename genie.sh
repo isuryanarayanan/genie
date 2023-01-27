@@ -165,11 +165,11 @@ if [ "$create" = true ]; then
     read -p "Enter keyword: " keyword
     echo "Creating configuration $name ..."
     echo "{
-    \"name\": \"$name\",
-    \"description\": \"$description\",
-    \"keyword\": \"$keyword\",
-    \"binded\": false
-}" > .genie/configurations/$keyword.json
+        \"name\": \"$name\",
+        \"description\": \"$description\",
+        \"keyword\": \"$keyword\",
+        \"binded\": false
+    }" > .genie/configurations/$keyword.json
     echo "Configuration file created"
     exit
 fi
