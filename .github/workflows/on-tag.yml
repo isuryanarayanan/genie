@@ -28,7 +28,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Copy environment variables and dockerfile file for production
-        run: cp conf/development/.env .env && cp conf/development/Dockerfile Dockerfile
+        run: cp conf/development/.env .env && cp conf/development/Dockerfile.deploy Dockerfile
 
       - name: Copy docker-compose file for production
         run: cp conf/development/docker-compose.deploy.yml docker-compose.yml
