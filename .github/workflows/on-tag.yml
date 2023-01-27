@@ -56,6 +56,9 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ steps.get_version.outputs.VERSION }} .
           docker push -a $ECR_REGISTRY/$ECR_REPOSITORY
+
+      - name: Swap out the :latest tag from the docker-compose file
+        run: sed -i 's/:latest/:${{ steps.get_version.outputs.VERSION }}/g' docker-compose.yml
       
       - name: Zip docker-compose file for sending to Beanstalk
         run: zip compose.zip docker-compose.yml .env
